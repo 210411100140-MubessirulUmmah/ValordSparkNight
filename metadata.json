@@ -1,0 +1,7 @@
+{
+  "name": "MatchMaker Pro - Ajang Perjodohan Eksklusif",
+  "description": "A sophisticated matchmaking platform featuring QR code authentication, AI-powered profile improvement, and a mutual-interest voting system for exclusive events.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
