@@ -44,7 +44,7 @@ export const LandingPage = () => {
 
 
         <p className="max-w-2xl text-lg md:text-2xl text-white/80 mb-12 font-bold capitalize tracking-widest whitespace-nowrap">
-          <span className="text-yellow-400">Chindo Swipe</span> Powered by{" "}
+          <span className="text-yellow-400"></span> Powered by{" "}
           <span className="text-yellow-400">Mimi x Holy Friends</span>
         </p>
 
