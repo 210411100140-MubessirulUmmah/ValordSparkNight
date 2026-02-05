@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { UserProfile } from '../types';
 import { supabase } from '../supabaseClient';
+import { mapUserFromDB } from '../services/userMapper';
 
 interface LoginPageProps {
   onLogin: (user: UserProfile) => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+export const LoginPage = ({ onLogin }: LoginPageProps) => {
+  const navigate = useNavigate();
+
   const [method, setMethod] = useState<'password' | 'qr'>('qr');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,8 +20,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // LOGIN VIA USERNAME + PASSWORD
-  const handlePasswordLogin = async (e: React.FormEvent) => {
+  // =============================
+  // PASSWORD LOGIN
+  // =============================
+  const handlePasswordLogin = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -34,11 +42,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       return;
     }
 
-    onLogin(data);
+    const user = mapUserFromDB(data);
+
+    onLogin(user);
+
+    navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard', {
+      replace: true,
+    });
   };
 
-  // LOGIN VIA QR TOKEN
-  const handleQRLogin = async (e: React.FormEvent) => {
+  // =============================
+  // QR LOGIN
+  // =============================
+  const handleQRLogin = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -56,19 +72,27 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       return;
     }
 
-    onLogin(data);
+    const user = mapUserFromDB(data);
+
+    onLogin(user);
+
+    navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard', {
+      replace: true,
+    });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fcfcfc] p-4">
       <div className="bg-white rounded-[3.5rem] shadow-[0_30px_100px_rgba(139,0,0,0.15)] w-full max-w-md overflow-hidden border border-gray-100 relative">
-        
+
         {/* HEADER */}
         <div className="bg-[#8B0000] p-12 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+
           <h1 className="text-3xl font-header text-white mb-1 tracking-tighter uppercase">
-            CHINDO <span className="text-yellow-400">SWIPE</span>
+            VALORD <span className="text-yellow-400">SPARK NIGHT</span>
           </h1>
+
           <p className="text-white/60 font-bold text-[10px] uppercase tracking-[0.3em]">
             Access Invitation Dashboard
           </p>
@@ -76,23 +100,35 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
         {/* BODY */}
         <div className="p-10">
-          {/* METHOD TOGGLE */}
+
+          {/* TOGGLE */}
           <div className="flex bg-gray-100 p-1.5 rounded-2xl mb-8">
             <button
-              onClick={() => { setMethod('qr'); setError(''); }}
+              onClick={() => {
+                setMethod('qr');
+                setError('');
+              }}
               className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all
-                ${method === 'qr'
+              ${
+                method === 'qr'
                   ? 'bg-[#8B0000] text-white shadow-lg'
-                  : 'text-gray-400'}`}
+                  : 'text-gray-400'
+              }`}
             >
               Token
             </button>
+
             <button
-              onClick={() => { setMethod('password'); setError(''); }}
+              onClick={() => {
+                setMethod('password');
+                setError('');
+              }}
               className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all
-                ${method === 'password'
+              ${
+                method === 'password'
                   ? 'bg-[#8B0000] text-white shadow-lg'
-                  : 'text-gray-400'}`}
+                  : 'text-gray-400'
+              }`}
             >
               Login
             </button>
@@ -105,7 +141,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             </div>
           )}
 
-          {/* FORM */}
+          {/* ================= QR FORM ================= */}
           {method === 'qr' ? (
             <form onSubmit={handleQRLogin} className="space-y-6">
               <input
@@ -116,15 +152,28 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 required
                 className="w-full px-6 py-5 bg-gray-50 border-2 border-transparent focus:border-yellow-400 rounded-2xl outline-none text-center font-header text-2xl tracking-[0.4em] text-[#8B0000]"
               />
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#8B0000] hover:bg-black text-white font-header py-5 rounded-[1.5rem] shadow-2xl transition-all uppercase tracking-widest"
-              >
-                {loading ? 'Checking...' : 'Enter Event 🏮'}
-              </button>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest
+                  text-[#8B0000] bg-red-100 hover:bg-yellow-400 transition-all"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-[#8B0000] hover:bg-black text-white font-header py-4 rounded-xl shadow-2xl transition-all uppercase tracking-widest"
+                >
+                  {loading ? 'Checking...' : 'Enter Event'}
+                </button>
+              </div>
             </form>
           ) : (
+            /* ================= PASSWORD FORM ================= */
             <form onSubmit={handlePasswordLogin} className="space-y-5">
               <input
                 type="text"
@@ -134,6 +183,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 required
                 className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-red-900 rounded-2xl outline-none font-bold"
               />
+
               <input
                 type="password"
                 value={password}
@@ -142,13 +192,27 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 required
                 className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-red-900 rounded-2xl outline-none"
               />
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#8B0000] hover:bg-black text-white font-header py-5 rounded-[1.5rem] shadow-2xl transition-all uppercase tracking-widest"
-              >
-                {loading ? 'Authenticating...' : 'Enter Event 🏮'}
-              </button>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest
+                  text-[#8B0000] bg-red-100 hover:bg-yellow-400 transition-all"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-[#8B0000] hover:bg-black text-white
+                  font-header py-4 rounded-2xl shadow-xl
+                  transition-all uppercase tracking-widest text-sm"
+                >
+                  {loading ? 'Authenticating...' : 'Enter Event'}
+                </button>
+              </div>
             </form>
           )}
         </div>
