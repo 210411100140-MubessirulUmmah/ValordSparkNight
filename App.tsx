@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { UserProfile } from './types';
 import { supabase } from './supabaseClient';
+import { PublicRoute } from './components/PublicRoute';
+
 
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
@@ -199,7 +201,16 @@ const App: React.FC = () => {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        {/* <Route path="/login" element={<LoginPage onLogin={handleLogin} />} /> */}
+        <Route
+  path="/login"
+  element={
+    <PublicRoute user={currentUser}>
+      <LoginPage onLogin={handleLogin} />
+    </PublicRoute>
+  }
+/>
+
 
         <Route
           path="/dashboard"
