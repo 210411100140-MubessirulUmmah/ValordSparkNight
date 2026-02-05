@@ -58,6 +58,21 @@ const App: React.FC = () => {
   }, []);
 
   // ========================
+  // DELETE USER (ADMIN)
+  // ========================
+  const handleDeleteUser = async (id: string) => {
+    if (!confirm('Remove participant from event?')) return;
+
+    const { error } = await supabase.from('users').delete().eq('id', id);
+    if (error) {
+      console.error('Delete user error:', error);
+      return;
+    }
+
+    fetchUsers();
+  };
+
+  // ========================
   // LOGIN / LOGOUT
   // ========================
   const handleLogin = (user: UserProfile) => {
@@ -249,6 +264,7 @@ const App: React.FC = () => {
             <ProtectedRoute user={currentUser}>
               <AdminDashboard
                 users={allUsers}
+                onDeleteUser={handleDeleteUser}
                 onAddUser={handleAddUser}
                 onResetVotes={handleResetVotes}
               />
