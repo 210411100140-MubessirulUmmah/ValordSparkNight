@@ -30,13 +30,18 @@ export const LandingPage = () => {
           💖 Presents 💖
         </div>
 
-        <h1 className="text-7xl md:text-[11rem] font-header text-white leading-none tracking-tighter mb-4">
-          VALORD
-        </h1>
+        <img
+  src="/images/VALORD SparkNight x CHINDO SWIPE.png"
+  alt="VALORD Spark Night"
+  className="
+    h-[8rem] 
+    md:h-[14rem] 
+    lg:h-[16rem]
+    object-contain 
+    mb-6
+  "
+/>
 
-        <h2 className="text-7xl md:text-[7rem] font-header text-yellow-400 leading-none tracking-tighter mb-4">
-          SPARK NIGHT
-        </h2>
 
         <p className="max-w-2xl text-lg md:text-2xl text-white/80 mb-12 font-bold capitalize tracking-widest whitespace-nowrap">
           <span className="text-yellow-400">Chindo Swipe</span> Powered by{" "}
