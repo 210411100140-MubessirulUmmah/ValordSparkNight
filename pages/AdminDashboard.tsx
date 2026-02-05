@@ -5,7 +5,7 @@ import { UserProfile, Gender } from '../types';
 
 interface AdminDashboardProps {
   users: UserProfile[];
-  onDeleteUser: (id: string) => void;
+  onDeleteUser: (id: string | number) => void;
   onResetVotes: () => void;
   onAddUser: (user: Partial<UserProfile>) => void;
 }
@@ -186,11 +186,15 @@ const femaleRankings = useMemo(
         {/* ACTION */}
         <td className="px-8 py-5">
           <button
-            onClick={() => onDeleteUser(user.id)}
+            onClick={(e) => {
+    e.stopPropagation();
+    onDeleteUser(user.id);
+  }}
             className="text-gray-300 hover:text-rose-500 transition-all p-2 bg-gray-50 rounded-lg"
           >
             🗑️
           </button>
+
         </td>
       </tr>
     ))}
