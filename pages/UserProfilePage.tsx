@@ -1,39 +1,78 @@
-import React, { useState, useRef } from 'react';
-import { UserProfile } from '../types';
+import React, { useState, useRef } from 'react'
+import { UserProfile } from '../types'
 
 interface UserProfilePageProps {
-  user: UserProfile;
-  onUpdate: (updatedUser: UserProfile) => void;
+  user: UserProfile
+  onUpdate: (updatedUser: UserProfile) => void
 }
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate }) => {
-  const [formData, setFormData] = useState<UserProfile>(user);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [formData, setFormData] = useState<UserProfile>(user)
 
-  const handleSave = () => {
-    setSaveStatus('saving');
-    setTimeout(() => {
-      onUpdate(formData);
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 2000);
-    }, 800);
-  };
+  const [photoStatus, setPhotoStatus] =
+    useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
 
+  const [profileStatus, setProfileStatus] =
+    useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  /* =====================
+     UPDATE FOTO (AUTO)
+  ===================== */
   const handlePhotoClick = () => {
-    fileInputRef.current?.click();
-  };
+    fileInputRef.current?.click()
+  }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData({ ...formData, photoUrl: reader.result as string });
-    };
-    reader.readAsDataURL(file);
-  };
+    try {
+      setPhotoStatus('saving')
+
+      const reader = new FileReader()
+      reader.onloadend = async () => {
+        const updatedUser = {
+          ...formData,
+          photoUrl: reader.result as string,
+        }
+
+        setFormData(updatedUser)
+
+        // 🔹 PANGGIL UPDATE LANGSUNG
+        onUpdate(updatedUser)
+
+        setPhotoStatus('saved')
+        setTimeout(() => setPhotoStatus('idle'), 2000)
+      }
+
+      reader.readAsDataURL(file)
+    } catch (err) {
+      console.error(err)
+      setPhotoStatus('error')
+    }
+  }
+
+  /* =====================
+     UPDATE DATA TEXT
+  ===================== */
+  const handleSaveProfile = async () => {
+    try {
+      setProfileStatus('saving')
+
+      // 🔹 nanti tinggal ganti ke Supabase update
+      await new Promise((r) => setTimeout(r, 600))
+
+      onUpdate(formData)
+
+      setProfileStatus('saved')
+      setTimeout(() => setProfileStatus('idle'), 2000)
+    } catch (err) {
+      console.error(err)
+      setProfileStatus('error')
+    }
+  }
 
   return (
     <div className="max-w-5xl mx-auto py-8 md:py-12 px-4 md:px-6">
@@ -77,7 +116,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
               <input
                 type="file"
                 ref={fileInputRef}
-                onChange={handleFileChange}
+                onChange={handlePhotoChange}
                 accept="image/*"
                 className="hidden"
               />
@@ -94,19 +133,32 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
             </div>
 
             {/* ACTION */}
-            <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-              {saveStatus === 'saved' && (
-                <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-5 py-2 rounded-xl border border-green-100">
-                  ✓ Saved
+            <div className="flex flex-col items-center gap-3 w-full md:w-auto">
+
+              {photoStatus === 'saving' && (
+                <span className="text-[10px] font-black uppercase tracking-widest text-yellow-600">
+                  Uploading photo…
+                </span>
+              )}
+
+              {photoStatus === 'saved' && (
+                <span className="text-green-600 text-[10px] font-black uppercase tracking-widest">
+                  ✓ Photo Updated
+                </span>
+              )}
+
+              {profileStatus === 'saved' && (
+                <span className="text-green-600 text-[10px] font-black uppercase tracking-widest">
+                  ✓ Profile Saved
                 </span>
               )}
 
               <button
-                onClick={handleSave}
-                disabled={saveStatus === 'saving'}
+                onClick={handleSaveProfile}
+                disabled={profileStatus === 'saving'}
                 className="w-full md:w-auto bg-[#8B0000] text-white px-8 py-4 rounded-[2rem] font-header uppercase tracking-widest text-sm shadow-xl hover:bg-black transition-all disabled:opacity-50"
               >
-                {saveStatus === 'saving' ? 'Saving…' : 'Update Profil'}
+                {profileStatus === 'saving' ? 'Saving…' : 'Update Profil'}
               </button>
             </div>
           </div>
@@ -117,48 +169,25 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
             {/* LEFT */}
             <div className="lg:col-span-7 space-y-8">
               <div className="bg-red-50/30 p-8 md:p-10 rounded-[2.5rem] border border-red-100">
-                <h3 className="text-lg md:text-xl font-header uppercase mb-8 flex items-center gap-2">
+                <h3 className="text-lg md:text-xl font-header uppercase mb-8">
                   🧧 Personal Identification
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[
-                    ['Public Name', 'text', formData.name, (v: string) => setFormData({ ...formData, name: v })],
-                    ['Age', 'number', formData.age, (v: number) => setFormData({ ...formData, age: v })],
-                    ['Main Profession', 'text', formData.job, (v: string) => setFormData({ ...formData, job: v })],
-                  ].map(([label, type, value, onChange], i) => (
-                    <div key={i}>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-2">
-                        {label}
-                      </label>
-                      <input
-                        type={type as string}
-                        value={value as any}
-                        onChange={(e) => onChange(type === 'number' ? Number(e.target.value) : e.target.value)}
-                        className="w-full px-5 py-4 rounded-2xl border border-gray-100 font-bold text-gray-700 focus:ring-4 focus:ring-red-100 outline-none"
-                      />
-                    </div>
-                  ))}
+                  <Input label="Public Name" value={formData.name}
+                    onChange={(v) => setFormData({ ...formData, name: v })} />
 
-                  <div>
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-2">
-                      Instagram Username
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 font-black text-gray-400">@</span>
-                      <input
-                        value={formData.igHandle}
-                        onChange={(e) => setFormData({ ...formData, igHandle: e.target.value })}
-                        className="w-full pl-10 pr-5 py-4 rounded-2xl border border-gray-100 font-bold text-gray-700 focus:ring-4 focus:ring-red-100 outline-none"
-                      />
-                    </div>
-                  </div>
+                  <Input label="Age" type="number" value={formData.age}
+                    onChange={(v) => setFormData({ ...formData, age: Number(v) })} />
+
+                  <Input label="Main Profession" value={formData.job}
+                    onChange={(v) => setFormData({ ...formData, job: v })} />
                 </div>
               </div>
             </div>
 
             {/* RIGHT */}
-            <div className="lg:col-span-5 space-y-8">
+            <div className="lg:col-span-5">
               <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-gray-100 shadow-sm">
                 <h3 className="text-lg font-header uppercase mb-4">Your Chindo Bio</h3>
                 <textarea
@@ -174,5 +203,22 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
+
+/* =====================
+   SMALL INPUT HELPER
+===================== */
+const Input = ({ label, value, onChange, type = 'text' }: any) => (
+  <div>
+    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-2">
+      {label}
+    </label>
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full px-5 py-4 rounded-2xl border border-gray-100 font-bold text-gray-700 focus:ring-4 focus:ring-red-100 outline-none"
+    />
+  </div>
+)
