@@ -85,13 +85,17 @@ const App: React.FC = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(safeUser));
     setCurrentUser(safeUser);
 
-    navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
+    // navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard');
+    navigate(
+  user.role === 'ADMIN' ? '/admin' : '/dashboard',
+  { replace: true }
+);
   };
 
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setCurrentUser(null);
-    navigate('/');
+    navigate('/', { replace: true });
   };
 
   // ========================

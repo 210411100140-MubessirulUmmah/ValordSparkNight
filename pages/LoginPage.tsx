@@ -44,11 +44,8 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
 
     const user = mapUserFromDB(data);
 
+    // ⛔ JANGAN navigate di sini
     onLogin(user);
-
-    navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard', {
-      replace: true,
-    });
   };
 
   // =============================
@@ -74,11 +71,8 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
 
     const user = mapUserFromDB(data);
 
+    // ⛔ JANGAN navigate di sini
     onLogin(user);
-
-    navigate(user.role === 'ADMIN' ? '/admin' : '/dashboard', {
-      replace: true,
-    });
   };
 
   return (
@@ -109,11 +103,10 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
                 setError('');
               }}
               className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all
-              ${
-                method === 'qr'
+                ${method === 'qr'
                   ? 'bg-[#8B0000] text-white shadow-lg'
                   : 'text-gray-400'
-              }`}
+                }`}
             >
               Token
             </button>
@@ -124,11 +117,10 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
                 setError('');
               }}
               className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all
-              ${
-                method === 'password'
+                ${method === 'password'
                   ? 'bg-[#8B0000] text-white shadow-lg'
                   : 'text-gray-400'
-              }`}
+                }`}
             >
               Login
             </button>
