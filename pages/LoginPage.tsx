@@ -178,7 +178,7 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value.toUpperCase())}
                 placeholder="Username"
                 required
                 className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-red-900 rounded-2xl outline-none font-bold"
