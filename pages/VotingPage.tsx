@@ -180,19 +180,7 @@ export const VotingPage: React.FC<VotingPageProps> = ({
           );
         })}
       </div>
-
-<footer className="w-full bg-yellow-400 py-6 mt-auto">
-  <div className="max-w-7xl mx-auto px-6">
-    <div className="flex justify-center items-center">
-      <img
-        src="/images/LOGO SPONSORED BY.png"
-        alt="Chindo Today"
-        className="max-h-24 md:max-h-32 w-auto object-contain"
-      />
-    </div>
-  </div>
-</footer>
-
+      
     </div>
     
   );
