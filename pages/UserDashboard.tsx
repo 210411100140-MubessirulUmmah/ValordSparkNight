@@ -1,7 +1,5 @@
 import React from 'react';
 import { UserProfile } from '../types';
-import { useNavigate } from 'react-router-dom';
-const navigate = useNavigate();
 
 interface UserDashboardProps {
   user: UserProfile;
@@ -73,11 +71,11 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
           </div>
 
           <button
-  onClick={() => navigate('/voting')}
-  className="bg-[#8B0000] hover:bg-black text-white px-10 py-5 rounded-[2rem] font-header shadow-2xl shadow-red-200 transition-all hover:-translate-y-1 hover:scale-105 active:scale-95 text-xl tracking-widest"
->
-  START VOTES 🔥
-</button>
+            onClick={() => onNavigate('voting')}
+            className="bg-[#8B0000] hover:bg-black text-white px-10 py-5 rounded-[2rem] font-header shadow-2xl shadow-red-200 transition-all hover:-translate-y-1 hover:scale-105 active:scale-95 text-xl tracking-widest"
+          >
+            START VOTES 🔥
+          </button>
         </div>
 
         {/* ===== CONTENT ===== */}
