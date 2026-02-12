@@ -438,21 +438,7 @@ const femaleRankings = useMemo(
         </button>
       </div>
 
-      {/* FOOTER */}
-      <section className="w-full bg-yellow-400 py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-12">
-
-            <img
-  src="/images/LOGO SPONSORED BY.png"
-  alt="Chindo Today"
-  className="max-h-24 md:max-h-32 w-auto object-contain"
-/>
-
-
-          </div>
-        </div>
-      </section>
+      
 
     </div>
   </div>
