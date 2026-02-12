@@ -1,19 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserProfile } from '../types';
 
 interface UserDashboardProps {
   user: UserProfile;
   allUsers: UserProfile[];
-  onNavigate: (page: string) => void;
 }
 
 export const UserDashboard: React.FC<UserDashboardProps> = ({
   user,
   allUsers,
-  onNavigate,
 }) => {
+  const navigate = useNavigate();
+
   // ======================
-  // MATCH LOGIC (SUPABASE)
+  // MATCH LOGIC
   // ======================
   const myMatches = allUsers.filter(
     u =>
@@ -21,9 +22,18 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
       u.votesGiven?.includes(user.id)
   );
 
+  const swipesLeft = Math.max(0, 3 - (user.votesGiven?.length || 0));
+
+  // ======================
+  // NAVIGATION
+  // ======================
+  const handleStartVotes = () => {
+    navigate('/voting');
+  };
+
   return (
     <>
-      {/* ================= MAIN CONTENT (CENTERED) ================= */}
+      {/* ================= MAIN CONTENT ================= */}
       <div className="max-w-7xl mx-auto py-12 px-6">
         {/* ===== PROFILE CARD ===== */}
         <div className="bg-white rounded-[3.5rem] p-10 shadow-[0_20px_80px_rgba(0,0,0,0.05)] border border-gray-100 mb-12 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden">
@@ -57,7 +67,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
               <div className="bg-white border border-red-100 px-5 py-2.5 rounded-2xl shadow-sm flex items-center">
                 <span className="text-[#8B0000] mr-2 font-bold">❤️</span>
                 <span className="text-[10px] font-black uppercase tracking-widest text-gray-600">
-                  {3 - (user.votesGiven?.length || 0)} Swipes Left
+                  {swipesLeft} Swipes Left
                 </span>
               </div>
 
@@ -70,17 +80,25 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
             </div>
           </div>
 
+          {/* ===== START VOTES BUTTON (FIXED) ===== */}
           <button
-            onClick={() => onNavigate('/voting')}
-            className="bg-[#8B0000] hover:bg-black text-white px-10 py-5 rounded-[2rem] font-header shadow-2xl shadow-red-200 transition-all hover:-translate-y-1 hover:scale-105 active:scale-95 text-xl tracking-widest"
+            type="button"
+            onClick={handleStartVotes}
+            disabled={swipesLeft === 0}
+            className={`px-10 py-5 rounded-[2rem] font-header text-xl tracking-widest transition-all
+              ${
+                swipesLeft === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-[#8B0000] hover:bg-black text-white shadow-2xl shadow-red-200 hover:-translate-y-1 hover:scale-105 active:scale-95'
+              }
+            `}
           >
             START VOTES 🔥
           </button>
         </div>
 
-        {/* ===== CONTENT ===== */}
+        {/* ===== MATCHES ===== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* MATCHES */}
           <div className="lg:col-span-8">
             <h2 className="text-2xl font-header text-gray-900 uppercase mb-8 flex items-center">
               <span className="mr-3">🧧</span> Your Successful Matches
@@ -125,7 +143,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
             )}
           </div>
 
-          {/* EVENT INFO */}
+          {/* ===== EVENT INFO ===== */}
           <div className="lg:col-span-4">
             <h2 className="text-2xl font-header uppercase mb-8 flex items-center">
               <span className="mr-3">🏮</span> Event Details
@@ -147,7 +165,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
         </div>
       </div>
 
-      {/* ================= FOOTER (FULL WIDTH) ================= */}
+      {/* ================= FOOTER ================= */}
       <section className="w-full bg-yellow-400 py-12">
         <div className="flex flex-wrap justify-center items-center gap-16 px-6">
           <img src="/images/Chindo Today.png" alt="Chindo Today" className="h-10 md:h-12 opacity-80 hover:opacity-100 transition" />
