@@ -62,26 +62,8 @@ export const LandingPage = () => {
           <div className="flex flex-wrap justify-center items-center gap-12">
 
             <img
-              src="/images/Chindo Today.png"
+              src="/images/LOGO SPONSORED BY.png"
               alt="Chindo Today"
-              className="h-12 md:h-14 object-contain"
-            />
-
-            <img
-              src="/images/Valord.png"
-              alt="Event Logo"
-              className="h-12 md:h-14 object-contain"
-            />
-
-            <img
-              src="/images/Hw Group.png"
-              alt="Hw Group"
-              className="h-14 md:h-16 object-contain"
-            />
-
-            <img
-              src="/images/Mimi.png"
-              alt="Mini Live House"
               className="h-12 md:h-14 object-contain"
             />
 
