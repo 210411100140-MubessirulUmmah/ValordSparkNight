@@ -62,10 +62,11 @@ export const LandingPage = () => {
           <div className="flex flex-wrap justify-center items-center gap-12">
 
             <img
-              src="/images/LOGO SPONSORED BY.png"
-              alt="Chindo Today"
-              className="h-12 md:h-14 object-contain"
-            />
+  src="/images/LOGO SPONSORED BY.png"
+  alt="Chindo Today"
+  className="max-h-24 md:max-h-32 w-auto object-contain"
+/>
+
 
           </div>
         </div>
