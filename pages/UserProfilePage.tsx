@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { UserProfile } from '../types'
 
 interface UserProfilePageProps {
@@ -9,59 +9,17 @@ interface UserProfilePageProps {
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate }) => {
   const [formData, setFormData] = useState<UserProfile>(user)
 
-  const [photoStatus, setPhotoStatus] =
-    useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
-
   const [profileStatus, setProfileStatus] =
     useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   /* =====================
-     UPDATE FOTO (AUTO)
-  ===================== */
-  const handlePhotoClick = () => {
-    fileInputRef.current?.click()
-  }
-
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    try {
-      setPhotoStatus('saving')
-
-      const reader = new FileReader()
-      reader.onloadend = async () => {
-        const updatedUser = {
-          ...formData,
-          photoUrl: reader.result as string,
-        }
-
-        setFormData(updatedUser)
-
-        // 🔹 PANGGIL UPDATE LANGSUNG
-        onUpdate(updatedUser)
-
-        setPhotoStatus('saved')
-        setTimeout(() => setPhotoStatus('idle'), 2000)
-      }
-
-      reader.readAsDataURL(file)
-    } catch (err) {
-      console.error(err)
-      setPhotoStatus('error')
-    }
-  }
-
-  /* =====================
-     UPDATE DATA TEXT
+     UPDATE DATA TEXT ONLY
   ===================== */
   const handleSaveProfile = async () => {
     try {
       setProfileStatus('saving')
 
-      // 🔹 nanti tinggal ganti ke Supabase update
+      // simulasi request
       await new Promise((r) => setTimeout(r, 600))
 
       onUpdate(formData)
@@ -89,37 +47,21 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
           {/* PROFILE TOP */}
           <div className="relative -mt-24 mb-10 flex flex-col md:flex-row items-center md:items-end md:justify-between gap-6 text-center md:text-left">
 
-            {/* PHOTO */}
-            <div
-              className="relative group cursor-pointer mx-auto md:mx-0"
-              onClick={handlePhotoClick}
-            >
+            {/* PHOTO (READ ONLY) */}
+            <div className="relative mx-auto md:mx-0 cursor-not-allowed opacity-90">
               <img
                 src={formData.photoUrl}
                 alt={formData.name}
-                className="w-40 h-40 md:w-48 md:h-48 rounded-[3rem] object-cover border-[8px] md:border-[10px] border-white shadow-2xl transition-transform duration-500 group-hover:scale-105"
+                className="w-40 h-40 md:w-48 md:h-48 rounded-[3rem] object-cover border-[8px] md:border-[10px] border-white shadow-2xl"
               />
-
-              <div className="absolute inset-0 bg-black/30 rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="text-white text-xs font-bold uppercase tracking-widest">
-                  Ganti Foto
-                </span>
-              </div>
 
               <button
                 type="button"
-                className="absolute bottom-2 right-2 bg-yellow-400 text-red-900 px-3 py-2 rounded-xl shadow-lg text-[10px] font-black uppercase tracking-widest border-4 border-white pointer-events-none"
+                disabled
+                className="absolute bottom-2 right-2 bg-gray-300 text-gray-600 px-3 py-2 rounded-xl shadow-lg text-[10px] font-black uppercase tracking-widest border-4 border-white cursor-not-allowed"
               >
-                Edit 📸
+                Locked 🔒
               </button>
-
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handlePhotoChange}
-                accept="image/*"
-                className="hidden"
-              />
             </div>
 
             {/* NAME */}
@@ -134,18 +76,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
 
             {/* ACTION */}
             <div className="flex flex-col items-center gap-3 w-full md:w-auto">
-
-              {photoStatus === 'saving' && (
-                <span className="text-[10px] font-black uppercase tracking-widest text-yellow-600">
-                  Uploading photo…
-                </span>
-              )}
-
-              {photoStatus === 'saved' && (
-                <span className="text-green-600 text-[10px] font-black uppercase tracking-widest">
-                  ✓ Photo Updated
-                </span>
-              )}
 
               {profileStatus === 'saved' && (
                 <span className="text-green-600 text-[10px] font-black uppercase tracking-widest">
@@ -174,14 +104,26 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Public Name" value={formData.name}
-                    onChange={(v) => setFormData({ ...formData, name: v })} />
+                  <Input
+                    label="Public Name"
+                    value={formData.name}
+                    onChange={(v: string) => setFormData({ ...formData, name: v })}
+                  />
 
-                  <Input label="Age" type="number" value={formData.age}
-                    onChange={(v) => setFormData({ ...formData, age: Number(v) })} />
+                  <Input
+                    label="Age"
+                    type="number"
+                    value={formData.age}
+                    onChange={(v: string) =>
+                      setFormData({ ...formData, age: Number(v) })
+                    }
+                  />
 
-                  <Input label="Main Profession" value={formData.job}
-                    onChange={(v) => setFormData({ ...formData, job: v })} />
+                  <Input
+                    label="Main Profession"
+                    value={formData.job}
+                    onChange={(v: string) => setFormData({ ...formData, job: v })}
+                  />
                 </div>
               </div>
             </div>
@@ -189,11 +131,15 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
             {/* RIGHT */}
             <div className="lg:col-span-5">
               <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-gray-100 shadow-sm">
-                <h3 className="text-lg font-header uppercase mb-4">Your Chindo Bio</h3>
+                <h3 className="text-lg font-header uppercase mb-4">
+                  Your Chindo Bio
+                </h3>
                 <textarea
                   rows={5}
                   value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bio: e.target.value })
+                  }
                   className="w-full px-6 py-5 rounded-2xl bg-gray-50 border border-gray-100 text-sm italic focus:ring-4 focus:ring-red-100 outline-none resize-none"
                 />
               </div>
@@ -209,7 +155,17 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({ user, onUpdate
 /* =====================
    SMALL INPUT HELPER
 ===================== */
-const Input = ({ label, value, onChange, type = 'text' }: any) => (
+const Input = ({
+  label,
+  value,
+  onChange,
+  type = 'text',
+}: {
+  label: string
+  value: any
+  onChange: (v: string) => void
+  type?: string
+}) => (
   <div>
     <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-2">
       {label}
