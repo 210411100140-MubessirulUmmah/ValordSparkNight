@@ -57,7 +57,7 @@ export const LandingPage = () => {
       </section>
 
       {/* FOOTER */}
-      <section className="w-full bg-yellow-400 py-12">
+      <section className="w-full bg-yellow-400 py-6">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-wrap justify-center items-center gap-12">
 
