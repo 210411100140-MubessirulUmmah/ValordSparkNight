@@ -1,6 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { UserProfile, Gender } from '../types';
+
 
 interface AdminDashboardProps {
   users: UserProfile[];
@@ -26,42 +27,61 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, onDeleteU
   });
 
   const userCount = users.filter(u => u.role === 'USER').length;
+  const safeVotes = (u?: UserProfile) => u?.votesGiven ?? [];
+
   
   const getRankings = (gender: Gender) => {
-    const scores = users
-      .filter(u => u.role === 'USER' && u.gender === gender)
-      .map(user => {
-        const votesReceived = users.filter(other => other.votesGiven.includes(user.id)).length;
-        return { user, votesReceived };
-      })
-      .sort((a, b) => b.votesReceived - a.votesReceived);
-    return scores;
-  };
+  return users
+    .filter(u => u.role === 'USER' && u.gender === gender)
+    .map(user => {
+      const votesReceived = users.filter(
+        other => safeVotes(other).includes(user.id)
+      ).length;
 
-  const maleRankings = getRankings('Pria');
-  const femaleRankings = getRankings('Wanita');
+      return { user, votesReceived };
+    })
+    .sort((a, b) => b.votesReceived - a.votesReceived);
+};
+
+
+  const maleRankings = useMemo(
+  () => getRankings('Pria'),
+  [users]
+);
+
+const femaleRankings = useMemo(
+  () => getRankings('Wanita'),
+  [users]
+);
+
 
   const getMatches = () => {
-    const matches: [UserProfile, UserProfile][] = [];
-    const processed = new Set<string>();
+  const matches: [UserProfile, UserProfile][] = [];
+  const processed = new Set<string>();
 
-    users.forEach(u1 => {
-      if (u1.role !== 'USER') return;
-      u1.votesGiven.forEach(u2Id => {
-        const u2 = users.find(u => u.id === u2Id);
-        if (u2 && u2.votesGiven.includes(u1.id)) {
-          const pairKey = [u1.id, u2.id].sort().join('-');
-          if (!processed.has(pairKey)) {
-            matches.push([u1, u2]);
-            processed.add(pairKey);
-          }
+  users.forEach(u1 => {
+    if (u1.role !== 'USER') return;
+
+    safeVotes(u1).forEach(u2Id => {
+      const u2 = users.find(u => u.id === u2Id);
+      if (!u2) return;
+
+      if (safeVotes(u2).includes(u1.id)) {
+        const pairKey = [u1.id, u2.id].sort().join('-');
+        if (!processed.has(pairKey)) {
+          matches.push([u1, u2]);
+          processed.add(pairKey);
         }
-      });
+      }
     });
-    return matches;
-  };
+  });
 
-  const matches = getMatches();
+  return matches;
+};
+
+
+  const matches = useMemo(() => getMatches(), [users]);
+
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +125,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, onDeleteU
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
               <StatCard label="Total Participants" value={userCount} color="gray" />
               <StatCard label="Successful Matches" value={matches.length} color="rose" highlight />
-              <StatCard label="Sparks Fired" value={users.reduce((acc, u) => acc + u.votesGiven.length, 0)} color="indigo" />
+              <StatCard label="Sparks Fired" value={users.reduce((acc, u) => acc + safeVotes(u).length, 0)} color="indigo" />
             </div>
 
             <div className="bg-white rounded-[2.5rem] shadow-sm border border-rose-50 overflow-hidden mb-8">
@@ -247,10 +267,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, onDeleteU
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex flex-wrap gap-3">
-                        {voter.votesGiven.length === 0 ? (
+                        {safeVotes(voter).length === 0 ? (
                           <span className="text-gray-300 italic text-xs font-medium">Silent heart...</span>
                         ) : (
-                          voter.votesGiven.map(cid => {
+                          safeVotes(voter).map(cid => {
                             const candidate = users.find(u => u.id === cid);
                             return (
                               <div key={cid} className="flex items-center bg-white pl-1 pr-3 py-1 rounded-2xl border border-rose-100 shadow-sm hover:border-rose-300 transition-all">
@@ -265,7 +285,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, onDeleteU
                     <td className="px-8 py-5">
                       <div className="flex items-center space-x-1.5">
                         {[1, 2, 3].map(i => (
-                          <div key={i} className={`w-3 h-3 rounded-full border border-white shadow-sm ${i <= voter.votesGiven.length ? 'bg-rose-500' : 'bg-gray-100'}`}></div>
+                          <div key={i} className={`w-3 h-3 rounded-full border border-white shadow-sm ${i <= safeVotes(voter).length ? 'bg-rose-500' : 'bg-gray-100'}`}></div>
                         ))}
                       </div>
                     </td>
@@ -417,6 +437,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, onDeleteU
           Close View
         </button>
       </div>
+
+      
 
     </div>
   </div>
