@@ -11,7 +11,7 @@ export const mapUserFromDB = (row: any): UserProfile => ({
   gender: row.gender,
   bio: row.bio,
 
-  photoUrl: row.photo_url,
+  photoUrl: row.photo_url || '/images/Avatar.png',
   igHandle: row.ig_handle,
   job: row.job,
   age: row.age,
@@ -31,7 +31,7 @@ export const mapUserToDB = (user: UserProfile) => ({
   gender: user.gender,
   bio: user.bio,
 
-  photo_url: user.photoUrl,
+  photo_url: user.photoUrl || '/images/Avatar.png',
   ig_handle: user.igHandle,
   job: user.job,
   age: user.age,
