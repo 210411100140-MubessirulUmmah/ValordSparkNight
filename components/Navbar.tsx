@@ -75,7 +75,7 @@ export const Navbar = ({ user, onLogout }: NavbarProps) => {
                     SWIPE SOULS
                   </Link>
 
-                  <Link
+                  {/* <Link
                     to="/profile"
                     className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
                       ${
@@ -85,7 +85,7 @@ export const Navbar = ({ user, onLogout }: NavbarProps) => {
                       }`}
                   >
                     EDIT PROFILE
-                  </Link>
+                  </Link> */}
                 </>
               )}
             </div>
