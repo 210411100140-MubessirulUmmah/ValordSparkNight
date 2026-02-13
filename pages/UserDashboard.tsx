@@ -134,8 +134,8 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
                         @{match.igHandle || '-'}
                       </p>
 <a
-  href={`https://wa.me/${user.wa}?text=${encodeURIComponent(
-    `Hi ${user.name}! Kita match di VALORD 🔥`
+  href={`https://wa.me/${match.wa}?text=${encodeURIComponent(
+    `Hi ${match.name}! Kita match di VALORD 🔥`
   )}`}
   target="_blank"
   rel="noopener noreferrer"
