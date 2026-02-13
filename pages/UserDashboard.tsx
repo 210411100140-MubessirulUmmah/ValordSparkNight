@@ -133,9 +133,17 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
                       <p className="text-xs font-bold text-[#8B0000] mb-4">
                         @{match.igHandle || '-'}
                       </p>
-                      href={`https://wa.me/${(user.wa)}?text=${encodeURIComponent(
-  `Hi ${user.name}! Kita match di VALORD 🔥`
-)}`}
+<a
+  href={`https://wa.me/${user.wa}?text=${encodeURIComponent(
+    `Hi ${user.name}! Kita match di VALORD 🔥`
+  )}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="block w-full py-2 bg-yellow-400 text-red-900 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#8B0000] hover:text-white transition text-center"
+>
+  SAY HI! 💌
+</a>
+
                     </div>
                   </div>
                 ))}
