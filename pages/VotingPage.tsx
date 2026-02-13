@@ -124,7 +124,7 @@ export const VotingPage: React.FC<VotingPageProps> = ({
 
                 <div className="absolute bottom-8 left-8 right-8 text-white z-10">
                   <p className="font-header text-2xl uppercase">
-                    {candidate.name.split(' ')[0]}, {candidate.age}
+                    {candidate.name}, {candidate.age}
                   </p>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-400">
                     {candidate.job}
