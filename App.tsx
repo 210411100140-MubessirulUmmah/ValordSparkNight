@@ -157,7 +157,7 @@ const App: React.FC = () => {
     if (!currentUser) return;
 
     const votesGiven = currentUser.votesGiven ?? [];
-    if (votesGiven.length >= 3 || votesGiven.includes(candidateId)) return;
+    if (votesGiven.length >= 2 || votesGiven.includes(candidateId)) return;
 
     const updatedVotes = [...votesGiven, candidateId];
     await updateVotes(currentUser.id, updatedVotes);
