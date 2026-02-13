@@ -179,7 +179,7 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value.toUpperCase())}
                 placeholder="••••••••"
                 required
                 className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-red-900 rounded-2xl outline-none"
