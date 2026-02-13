@@ -185,13 +185,13 @@ export const Navbar = ({ user, onLogout }: NavbarProps) => {
                 SWIPE SOULS
               </Link>
 
-              <Link
+              {/* <Link
                 to="/profile"
                 onClick={() => setMobileOpen(false)}
                 className="block text-sm font-black uppercase tracking-widest text-gray-900"
               >
                 EDIT PROFILE
-              </Link>
+              </Link> */}
             </>
           )}
         </div>
