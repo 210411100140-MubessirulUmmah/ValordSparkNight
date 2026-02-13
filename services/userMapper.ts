@@ -17,7 +17,8 @@ export const mapUserFromDB = (row: any): UserProfile => ({
   age: row.age,
 
   votesGiven: row.votes_given ?? [],
-  matches: row.matches ?? []
+  matches: row.matches ?? [],
+  wa: row.wa
 });
 
 export const mapUserToDB = (user: UserProfile) => ({
@@ -37,5 +38,6 @@ export const mapUserToDB = (user: UserProfile) => ({
   age: user.age,
 
   votes_given: user.votesGiven,
-  matches: user.matches
+  matches: user.matches,
+  wa: user.wa
 });

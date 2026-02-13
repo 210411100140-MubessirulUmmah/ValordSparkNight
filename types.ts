@@ -19,6 +19,7 @@ export interface UserProfile {
 
   votesGiven: string[];
   matches: string[];
+  wa: string;
 }
 
 export interface AuthState {

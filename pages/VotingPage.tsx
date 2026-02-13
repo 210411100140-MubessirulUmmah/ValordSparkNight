@@ -49,7 +49,7 @@ export const VotingPage: React.FC<VotingPageProps> = ({
           </h1>
 
           <p className="text-gray-500 font-medium text-lg leading-relaxed">
-            Anda memiliki 3 kesempatan swipe malam ini.
+            Anda memiliki 2 kesempatan vote malam ini.
             Jika kalian saling memilih, match akan terjadi otomatis.
           </p>
         </div>
