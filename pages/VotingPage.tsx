@@ -29,6 +29,13 @@ export const VotingPage: React.FC<VotingPageProps> = ({
   );
 
   // ======================
+  // SORT BY AGE (TERMuda → TERTUA)
+  // ======================
+  const sortedCandidates = [...filteredCandidates].sort(
+    (a, b) => (a.age ?? 0) - (b.age ?? 0)
+  );
+
+  // ======================
   // VOTES LEFT (SAFE)
   // ======================
   const votesUsed = currentUser.votesGiven?.length || 0;
@@ -89,7 +96,7 @@ export const VotingPage: React.FC<VotingPageProps> = ({
         </div>
       </div>
 
-      {/* ===== VOTE FINISHED BANNER (TIDAK MENGHILANGKAN GRID) ===== */}
+      {/* ===== VOTE FINISHED BANNER ===== */}
       {votesLeft <= 0 && (
         <div className="bg-white rounded-[4rem] p-16 text-center shadow-xl border border-gray-50 max-w-4xl mx-auto mb-16">
           <div className="text-6xl mb-6">🧧</div>
@@ -102,9 +109,9 @@ export const VotingPage: React.FC<VotingPageProps> = ({
         </div>
       )}
 
-      {/* ===== CANDIDATE GRID (SELALU TAMPIL) ===== */}
+      {/* ===== CANDIDATE GRID ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
-        {filteredCandidates.map(candidate => {
+        {sortedCandidates.map(candidate => {
           const hasVoted = currentUser.votesGiven?.includes(candidate.id);
 
           return (
@@ -180,8 +187,6 @@ export const VotingPage: React.FC<VotingPageProps> = ({
           );
         })}
       </div>
-      
     </div>
-    
   );
 };
