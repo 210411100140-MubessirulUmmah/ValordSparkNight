@@ -158,7 +158,7 @@ const femaleRankings = useMemo(
       {/* NO URUT (SUDAH SESUAI AGE) */}
       <td className="px-8 py-5">
         <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600">
-          {index + 1}
+          {user.age}
         </div>
       </td>
 
