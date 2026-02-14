@@ -22,6 +22,13 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
       u.votesGiven?.includes(user.id)
   );
 
+  // ======================
+  // PEOPLE WHO VOTED ME
+  // ======================
+  const peopleWhoVotedMe = allUsers.filter(
+    u => u.votesGiven?.includes(user.id)
+  );
+
   const swipesLeft = Math.max(0, 2 - (user.votesGiven?.length || 0));
 
   // ======================
@@ -80,7 +87,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
             </div>
           </div>
 
-          {/* ===== START VOTES BUTTON (FIXED) ===== */}
+          {/* ===== START VOTES BUTTON ===== */}
           <button
             type="button"
             onClick={handleStartVotes}
@@ -133,20 +140,62 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
                       <p className="text-xs font-bold text-[#8B0000] mb-4">
                         @{match.igHandle || '-'}
                       </p>
-<a
-  href={`https://wa.me/${match.wa}?text=${encodeURIComponent(
-    `Hi ${match.name}! Kita match di VALORD 🔥`
-  )}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="block w-full py-2 bg-yellow-400 text-red-900 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#8B0000] hover:text-white transition text-center"
->
-  SAY HI! 💌
-</a>
 
+                      <a
+                        href={`https://wa.me/${match.wa}?text=${encodeURIComponent(
+                          `Hi ${match.name}! Kita match di VALORD 🔥`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full py-2 bg-yellow-400 text-red-900 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#8B0000] hover:text-white transition text-center"
+                      >
+                        SAY HI! 💌
+                      </a>
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* ===== PEOPLE WHO LIKED YOU ===== */}
+            {swipesLeft === 0 && myMatches.length === 0 && peopleWhoVotedMe.length > 0 && (
+              <div className="mt-16">
+                <div className="bg-white rounded-[3.5rem] p-16 text-center border border-yellow-100 shadow-sm mb-10">
+                  <div className="text-6xl mb-6">💛</div>
+                  <h3 className="text-2xl font-header uppercase mb-4">
+                    Maaf, belum ada kecocokan malam ini
+                  </h3>
+                  <p className="text-gray-500 italic max-w-xl mx-auto">
+                    Tapi ada beberapa orang yang tertarik dan memilih kamu ✨
+                  </p>
+                </div>
+
+                <h4 className="text-xl font-header uppercase mb-8 flex items-center">
+                  <span className="mr-3">✨</span> Mereka Memilih Kamu
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {peopleWhoVotedMe.map(person => (
+                    <div
+                      key={person.id}
+                      className="bg-white p-6 rounded-[3rem] flex items-center border border-gray-100 shadow-sm hover:shadow-xl transition"
+                    >
+                      <img
+                        src={person.photoUrl}
+                        alt={person.name}
+                        className="w-20 h-20 rounded-2xl object-cover mr-6"
+                      />
+                      <div>
+                        <p className="font-header uppercase text-lg">
+                          {person.name}
+                        </p>
+                        <p className="text-xs font-bold text-[#8B0000]">
+                          @{person.igHandle || '-'}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -174,19 +223,13 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
       </div>
 
       {/* ================= FOOTER ================= */}
-{/* FOOTER */}
       <section className="w-full bg-yellow-400 py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-12">
-
-            <img
-  src="/images/LOGO SPONSORED BY.png"
-  alt="Chindo Today"
-  className="max-h-24 md:max-h-32 w-auto object-contain"
-/>
-
-
-          </div>
+        <div className="max-w-7xl mx-auto px-6 flex justify-center">
+          <img
+            src="/images/LOGO SPONSORED BY.png"
+            alt="Chindo Today"
+            className="max-h-24 md:max-h-32 w-auto object-contain"
+          />
         </div>
       </section>
     </>
