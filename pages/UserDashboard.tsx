@@ -67,7 +67,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
             </h1>
 
             <p className="font-medium text-lg mb-6 leading-relaxed">
-              Siap mencari "Spark" di malam Valentine PIK? Gunakan kesempatanmu dengan bijak.
+              Siap mencari Cinta di malam Valentine? Yuk, gunakan kesempatanmu dengan bijak.
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center md:justify-start">
@@ -143,7 +143,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
 
                       <a
                         href={`https://wa.me/${match.wa}?text=${encodeURIComponent(
-                          `Hi ${match.name}! Kita match di VALORD 🔥`
+                          `Hi ${match.name}! Kita match di VALORD Spark Night x Chindo Swipe. Ayo Ngobrol!`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -191,6 +191,18 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
                         </p>
                         <p className="text-xs font-bold text-[#8B0000]">
                           @{person.igHandle || '-'}
+                        </p>
+                        <p>
+                          <a
+                        href={`https://wa.me/${person.wa}?text=${encodeURIComponent(
+                          `Hi ${person.name}! Terimakasih sudah menyukaiku`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full py-2 bg-yellow-400 text-red-900 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#8B0000] hover:text-white transition text-center"
+                      >
+                        SAY HI! 💌
+                      </a>
                         </p>
                       </div>
                     </div>
