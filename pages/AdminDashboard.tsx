@@ -89,6 +89,12 @@ const femaleRankings = useMemo(
     setShowAddModal(false);
     setNewUser({ name: '', username: '', password: '123', gender: 'Pria', job: '', age: 20, igHandle: '', bio: '' });
   };
+  const overviewUsersByAge = useMemo(() => {
+  return users
+    .filter(u => u.role === 'USER')
+    .sort((a, b) => (a.age ?? 0) - (b.age ?? 0));
+}, [users]);
+
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-6">
@@ -143,58 +149,57 @@ const femaleRankings = useMemo(
                       <th className="px-8 py-4">Manage</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-rose-50">
-  {users
-    .filter(u => u.role === 'USER')
-    .map((user, index) => (
-      <tr
-        key={user.id}
-        className="hover:bg-rose-50/30 transition-colors group"
-      >
-        {/* NOMOR URUT */}
-        <td className="px-8 py-5">
-          <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600">
-            {index + 1}
+<tbody className="divide-y divide-rose-50">
+  {overviewUsersByAge.map((user, index) => (
+    <tr
+      key={user.id}
+      className="hover:bg-rose-50/30 transition-colors group"
+    >
+      {/* NO URUT (SUDAH SESUAI AGE) */}
+      <td className="px-8 py-5">
+        <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600">
+          {index + 1}
+        </div>
+      </td>
+
+      {/* USER INFO */}
+      <td className="px-8 py-5">
+        <div className="flex items-center">
+          <img
+            src={user.photoUrl}
+            className="w-12 h-12 rounded-2xl object-cover mr-4 shadow-sm"
+          />
+          <div>
+            <p className="font-black text-gray-900 text-sm leading-tight">
+              {user.name}
+            </p>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter mt-0.5">
+              {user.gender} • {user.job} • {user.age} yrs
+            </p>
           </div>
-        </td>
+        </div>
+      </td>
 
-        {/* USER INFO */}
-        <td className="px-8 py-5">
-          <div className="flex items-center">
-            <img
-              src={user.photoUrl}
-              className="w-12 h-12 rounded-2xl object-cover mr-4 shadow-sm"
-            />
-            <div>
-              <p className="font-black text-gray-900 text-sm leading-tight">
-                {user.name}
-              </p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter mt-0.5">
-                {user.gender} &bull; {user.job}
-              </p>
-            </div>
-          </div>
-        </td>
+      {/* TOKEN */}
+      <td className="px-8 py-5">
+        <code className="bg-rose-50/50 px-3 py-1.5 rounded-xl text-xs font-mono font-black text-rose-500 border border-rose-100">
+          {user.qrToken}
+        </code>
+      </td>
 
-        {/* QR TOKEN */}
-        <td className="px-8 py-5">
-          <code className="bg-rose-50/50 px-3 py-1.5 rounded-xl text-xs font-mono font-black text-rose-500 border border-rose-100">
-            {user.qrToken}
-          </code>
-        </td>
-
-        {/* ACTION */}
-        <td className="px-8 py-5">
-          <button
-            onClick={() => onDeleteUser(user.id)}
-            className="text-gray-300 hover:text-rose-500 transition-all p-2 bg-gray-50 rounded-lg"
-          >
-            🗑️
-          </button>
-        </td>
-      </tr>
-    ))}
+      {/* ACTION */}
+      <td className="px-8 py-5">
+        <button
+          onClick={() => onDeleteUser(user.id)}
+          className="text-gray-300 hover:text-rose-500 transition-all p-2 bg-gray-50 rounded-lg"
+        >
+          🗑️
+        </button>
+      </td>
+    </tr>
+  ))}
 </tbody>
+
 
                 </table>
               </div>
