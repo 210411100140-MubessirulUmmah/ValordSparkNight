@@ -94,6 +94,12 @@ const femaleRankings = useMemo(
     .filter(u => u.role === 'USER')
     .sort((a, b) => (a.age ?? 0) - (b.age ?? 0));
 }, [users]);
+const votersByAge = useMemo(() => {
+  return users
+    .filter(u => u.role === 'USER')
+    .sort((a, b) => (a.age ?? 0) - (b.age ?? 0));
+}, [users]);
+
 
 
   return (
@@ -259,7 +265,7 @@ const femaleRankings = useMemo(
                 </tr>
               </thead>
               <tbody className="divide-y divide-rose-50">
-                {users.filter(u => u.role === 'USER').map(voter => (
+                {votersByAge.map(voter => (
                   <tr key={voter.id} className="hover:bg-rose-50/30 transition-colors">
                     <td className="px-8 py-5">
                       <div className="flex items-center">
