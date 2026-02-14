@@ -39,7 +39,7 @@ export const VotingPage: React.FC<VotingPageProps> = ({
   // VOTES LEFT (SAFE)
   // ======================
   const votesUsed = currentUser.votesGiven?.length || 0;
-  const votesLeft = Math.max(0, 2 - votesUsed);
+  const votesLeft = Math.max(0, 1 - votesUsed);
 
   return (
     <div className="max-w-7xl mx-auto py-16 px-6">
@@ -56,8 +56,8 @@ export const VotingPage: React.FC<VotingPageProps> = ({
           </h1>
 
           <p className="text-gray-500 font-medium text-lg leading-relaxed">
-            Anda memiliki 2 kesempatan vote malam ini.
-            Jika kalian saling memilih, match akan terjadi otomatis.
+            Anda memiliki 1 kesempatan vote malam ini.
+            Jika kalian saling memilih, match akan terjadi.
           </p>
         </div>
 
@@ -72,7 +72,7 @@ export const VotingPage: React.FC<VotingPageProps> = ({
               Energy Love Sisa
             </p>
             <div className="flex items-center">
-              {[1, 2].map(i => (
+              {[1].map(i => (
                 <div
                   key={i}
                   className={`w-8 h-8 rounded-full mr-2 flex items-center justify-center transition-all ${

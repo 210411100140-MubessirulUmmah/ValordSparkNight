@@ -295,7 +295,7 @@ const votersByAge = useMemo(() => {
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex items-center space-x-1.5">
-                        {[1, 2].map(i => (
+                        {[1].map(i => (
                           <div key={i} className={`w-3 h-3 rounded-full border border-white shadow-sm ${i <= safeVotes(voter).length ? 'bg-rose-500' : 'bg-gray-100'}`}></div>
                         ))}
                       </div>

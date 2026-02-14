@@ -29,7 +29,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
     u => u.votesGiven?.includes(user.id)
   );
 
-  const swipesLeft = Math.max(0, 2 - (user.votesGiven?.length || 0));
+  const swipesLeft = Math.max(0, 1 - (user.votesGiven?.length || 0));
 
   // ======================
   // NAVIGATION
